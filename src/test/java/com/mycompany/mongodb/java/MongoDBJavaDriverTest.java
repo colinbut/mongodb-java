@@ -57,6 +57,13 @@ public class MongoDBJavaDriverTest {
         String string = document.getString("String");
         Integer integer = (Integer) document.get("int");
         Boolean _boolean = document.getBoolean("Boolean");
+        Date date = document.getDate("Date");
+        Double _double = document.getDouble("Double");
+        Long _long = document.getLong("Long");
+        ObjectId objectId = document.getObjectId("ObjectId");
+        List<Integer> list = (List<Integer>) document.get("List");
+
+        Helpers.printJson(document);
     }
 
     @Test
