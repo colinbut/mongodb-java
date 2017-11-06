@@ -7,6 +7,7 @@ package com.mycompany.mongodb.java;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -87,17 +88,38 @@ public class MongoDBJavaDriverTest {
 
     @Test(dependsOnMethods = "testInsertMany")
     public void testFind() {
+
+        // find One
+        Document firstDocument = usersCollection.find().first();
+        Helpers.printJson(firstDocument);
+
+        // Find All (into)
         List<Document> users = usersCollection.find().into(new ArrayList<Document>());
         for (Document user : users) {
             System.out.println(user);
         }
 
+        // Find (with Iteration)
+        MongoCursor<Document> cursor = usersCollection.find().iterator();
+        try {
+            while(cursor.hasNext()) {
+                Helpers.printJson(cursor.next());
+            }
+        } finally {
+            cursor.close();
+        }
+
+        // Find particular one
         Document user = usersCollection.find(new Document("name", "Jamie")).first();
         System.out.println("User:" + user);
 
+        // Find particular one with Filter
         Document jamie = usersCollection.find(new Document("name", "Jamie")
             .append("age", new Document("$gte", 25))).first();
         System.out.println(jamie);
+
+        long count = usersCollection.count();
+        System.out.println("Count:" + count);
     }
 
     @Test(dependsOnMethods = "testFind")
