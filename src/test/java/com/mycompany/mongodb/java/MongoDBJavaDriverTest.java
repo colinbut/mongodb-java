@@ -9,12 +9,14 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MongoDBJavaDriverTest {
@@ -38,7 +40,24 @@ public class MongoDBJavaDriverTest {
         mongoClient.close();
     }
 
+    @Test
+    public void representingDocuments() {
+        Document document = new Document()
+            .append("String", "Hello String")
+            .append("int", 23)
+            .append("Long", 3L)
+            .append("Double", 10.2)
+            .append("Boolean", true)
+            .append("Date", new Date())
+            .append("ObjectId", new ObjectId())
+            .append("Null", null)
+            .append("embeddedDoc", new Document("x", 0))
+            .append("List", Arrays.asList(1,2,3));
 
+        String string = document.getString("String");
+        Integer integer = (Integer) document.get("int");
+        Boolean _boolean = document.getBoolean("Boolean");
+    }
 
     @Test
     public void testInsertOne() {
