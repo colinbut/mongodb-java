@@ -19,7 +19,10 @@ import java.util.List;
 
 public class MongoDBJavaDriverTest {
 
-    MongoClient mongoClient = new MongoClient("localhost", 27017);
+    public static final String HOST = "localhost";
+    public static final int PORT = 27017;
+
+    MongoClient mongoClient = new MongoClient(HOST, PORT);
     MongoDatabase testDb = mongoClient.getDatabase("test");
 
     MongoCollection<Document> usersCollection = testDb.getCollection("users");
@@ -34,6 +37,8 @@ public class MongoDBJavaDriverTest {
     public void tearDown() {
         mongoClient.close();
     }
+
+
 
     @Test
     public void testInsertOne() {
@@ -67,5 +72,13 @@ public class MongoDBJavaDriverTest {
         Document jamie = usersCollection.find(new Document("name", "Jamie")
             .append("age", new Document("$gte", 25))).first();
         System.out.println(jamie);
+    }
+
+    @Test
+    public void testUpdate() {
+        Document documentToUpdate = new Document("name", "Jamie").append("age", 27);
+
+        usersCollection.updateOne(documentToUpdate,
+            new Document("$set", new Document("name", "Jamie Book")));
     }
 }
