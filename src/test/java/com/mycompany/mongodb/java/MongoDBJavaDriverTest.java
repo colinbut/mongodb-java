@@ -12,7 +12,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +66,7 @@ public class MongoDBJavaDriverTest {
         Helpers.printJson(document);
     }
 
-    @Test
+    @Test(dependsOnMethods = "representingDocuments")
     public void testInsertOne() {
         Document daniel = new Document();
         daniel.append("name", "Daniel");
@@ -75,7 +75,7 @@ public class MongoDBJavaDriverTest {
         usersCollection.insertOne(daniel);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testInsertOne")
     public void testInsertMany() {
         Document jamie = new Document("name", "Jamie").append("age", 27);
         Document andy = new Document("name", "Andy").append("age", 12);
@@ -85,7 +85,7 @@ public class MongoDBJavaDriverTest {
         usersCollection.insertMany(Arrays.asList(jamie, andy, steven, david));
     }
 
-    @Test
+    @Test(dependsOnMethods = "testInsertMany")
     public void testFind() {
         List<Document> users = usersCollection.find().into(new ArrayList<Document>());
         for (Document user : users) {
@@ -100,7 +100,7 @@ public class MongoDBJavaDriverTest {
         System.out.println(jamie);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testFind")
     public void testUpdate() {
         Document documentToUpdate = new Document("name", "Jamie").append("age", 27);
 
